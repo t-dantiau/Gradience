@@ -5,7 +5,7 @@
 <h1 align="center">
   <img src="https://github.com/GradienceTeam/Gradience/raw/main/data/icons/hicolor/scalable/apps/com.github.GradienceTeam.Gradience.svg" alt="Gradience" width="192" height="192"/>
   <br>
-  Gradience - φοῖνιξ
+  Gradience φοῖνιξ
 </h1>
 
 <p align="center">
@@ -17,3 +17,7 @@
 The CLI version of Gradience is available as a standalone binary. You can download it from [GitHub Releases](https://github.com/t-dantiau/Gradience/releases) or build it yourself from sources.
 
 Documentation for the CLI is available as markdown [here](./CommandLineHelp.md) or by using the `--help` flag.
+
+## License
+
+Gradience φοῖνιξ is licensed under the [EUPL](./LICENSE)
