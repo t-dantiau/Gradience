@@ -1,9 +1,7 @@
-use std::collections::BTreeMap;
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 use handlebars::Handlebars;
-
-
+use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
+use std::collections::HashMap;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub enum AccentsColor {
@@ -22,15 +20,12 @@ pub enum AccentsColor {
 pub enum Mode {
     Light,
     Dark,
-
 }
-
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub enum GtkVersion {
     Gtk3,
     Gtk4,
-
 }
 
 fn default_version() -> String {
@@ -46,6 +41,7 @@ pub struct Preset {
 
     #[serde(default)]
     pub author: Author,
+    #[serde(default)]
     pub description: String,
     #[serde(default)]
     pub supported: Supported,
@@ -53,11 +49,11 @@ pub struct Preset {
     pub license: License,
     pub variables: Variables,
     pub palette: Palette,
+    #[serde(alias = "custom_css")]
     pub custom: Custom,
     #[serde(default)]
     pub shell: Shell,
 }
-
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Shell {
@@ -81,7 +77,6 @@ pub struct Shell {
     pub system_fg_color: Variable,
     #[serde(default = "Shell::default_panel_fg_color")]
     pub panel_fg_color: Variable,
-
 }
 
 impl Default for Shell {
@@ -99,7 +94,6 @@ impl Default for Shell {
             osd_fg_color: Shell::default_osd_fg_color(),
         }
     }
-
 }
 
 impl Shell {
@@ -157,7 +151,6 @@ impl Shell {
             light: "#f2f2f2".to_string(),
             dark: "#2a2a2a".to_string(),
         }
-    
     }
 
     fn default_osd_bg_color() -> Variable {
@@ -206,7 +199,7 @@ pub struct Supported {
 impl Default for Supported {
     fn default() -> Self {
         Supported {
-            gnome: ">45".to_string(),
+            gnome: ">46".to_string(),
             adw: ">1.5".to_string(),
             gtk: ">3.24".to_string(),
             mode: vec!["light".to_string(), "dark".to_string()],
@@ -438,8 +431,12 @@ impl VariablesName {
             VariablesName::SidebarShadeColor => "sidebar_shade_color".to_string(),
             VariablesName::SecondarySidebarBgColor => "secondary_sidebar_bg_color".to_string(),
             VariablesName::SecondarySidebarFgColor => "secondary_sidebar_fg_color".to_string(),
-            VariablesName::SecondarySidebarBackdropColor => "secondary_sidebar_backdrop_color".to_string(),
-            VariablesName::SecondarySidebarShadeColor => "secondary_sidebar_shade_color".to_string(),
+            VariablesName::SecondarySidebarBackdropColor => {
+                "secondary_sidebar_backdrop_color".to_string()
+            }
+            VariablesName::SecondarySidebarShadeColor => {
+                "secondary_sidebar_shade_color".to_string()
+            }
         }
     }
 }
@@ -497,10 +494,12 @@ impl<'a> std::iter::Iterator for VariablesIterator<'a> {
             VariablesName::SidebarShadeColor => VariablesName::SecondarySidebarBgColor,
             VariablesName::SecondarySidebarBgColor => VariablesName::SecondarySidebarFgColor,
             VariablesName::SecondarySidebarFgColor => VariablesName::SecondarySidebarBackdropColor,
-            VariablesName::SecondarySidebarBackdropColor => VariablesName::SecondarySidebarShadeColor,
+            VariablesName::SecondarySidebarBackdropColor => {
+                VariablesName::SecondarySidebarShadeColor
+            }
             VariablesName::SecondarySidebarShadeColor => return None,
         };
-        result 
+        result
     }
 }
 
@@ -948,74 +947,71 @@ impl Variable {
                 slate,
                 teal,
                 default,
-            } => {
-                match accent {
-                    "blue" => {
-                        if blue.is_empty() {
-                            default.to_string()
-                        } else {
-                            blue.to_string()
-                        }
+            } => match accent {
+                "blue" => {
+                    if blue.is_empty() {
+                        default.to_string()
+                    } else {
+                        blue.to_string()
                     }
-                    "green" => {
-                        if green.is_empty() {
-                            default.to_string()
-                        } else {
-                            green.to_string()
-                        }
-                    }
-                    "red" => {
-                        if red.is_empty() {
-                            default.to_string()
-                        } else {
-                            red.to_string()
-                        }
-                    }
-                    "yellow" => {
-                        if yellow.is_empty() {
-                            default.to_string()
-                        } else {
-                            yellow.to_string()
-                        }
-                    }
-                    "purple" => {
-                        if purple.is_empty() {
-                            default.to_string()
-                        } else {
-                            purple.to_string()
-                        }
-                    }
-                    "pink" => {
-                        if pink.is_empty() {
-                            default.to_string()
-                        } else {
-                            pink.to_string()
-                        }
-                    }
-                    "orange" => {
-                        if orange.is_empty() {
-                            default.to_string()
-                        } else {
-                            orange.to_string()
-                        }
-                    }
-                    "slate" => {
-                        if slate.is_empty() {
-                            default.to_string()
-                        } else {
-                            slate.to_string()
-                        }
-                    }
-                    "teal" => {
-                        if teal.is_empty() {
-                            default.to_string()
-                        } else {
-                            teal.to_string()
-                        }
-                    }
-                    _ => default.to_string(),
                 }
-
+                "green" => {
+                    if green.is_empty() {
+                        default.to_string()
+                    } else {
+                        green.to_string()
+                    }
+                }
+                "red" => {
+                    if red.is_empty() {
+                        default.to_string()
+                    } else {
+                        red.to_string()
+                    }
+                }
+                "yellow" => {
+                    if yellow.is_empty() {
+                        default.to_string()
+                    } else {
+                        yellow.to_string()
+                    }
+                }
+                "purple" => {
+                    if purple.is_empty() {
+                        default.to_string()
+                    } else {
+                        purple.to_string()
+                    }
+                }
+                "pink" => {
+                    if pink.is_empty() {
+                        default.to_string()
+                    } else {
+                        pink.to_string()
+                    }
+                }
+                "orange" => {
+                    if orange.is_empty() {
+                        default.to_string()
+                    } else {
+                        orange.to_string()
+                    }
+                }
+                "slate" => {
+                    if slate.is_empty() {
+                        default.to_string()
+                    } else {
+                        slate.to_string()
+                    }
+                }
+                "teal" => {
+                    if teal.is_empty() {
+                        default.to_string()
+                    } else {
+                        teal.to_string()
+                    }
+                }
+                _ => default.to_string(),
             },
             Variable::ModeAccent { light, dark } => {
                 if mode == "light" {
@@ -1038,24 +1034,28 @@ impl Variable {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Palette {
+    #[serde(alias = "blue_")]
     pub blue: HashMap<String, String>,
+    #[serde(alias = "green_")]
     pub green: HashMap<String, String>,
+    #[serde(alias = "yellow_")]
     pub yellow: HashMap<String, String>,
+    #[serde(alias = "orange_")]
     pub orange: HashMap<String, String>,
+    #[serde(alias = "red_")]
     pub red: HashMap<String, String>,
+    #[serde(alias = "purple_")]
     pub purple: HashMap<String, String>,
+    #[serde(alias = "brown_")]
     pub brown: HashMap<String, String>,
+    #[serde(alias = "light_")]
     pub light: HashMap<String, String>,
+    #[serde(alias = "dark_")]
     pub dark: HashMap<String, String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Custom {
-    pub css: Css,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Css {
     #[serde(default)]
     pub gtk4: String,
     #[serde(default)]
@@ -1086,8 +1086,8 @@ impl Preset {
 
     pub fn to_css(&self, mode: Mode, accent: AccentsColor, gtk: GtkVersion) -> String {
         let mut css = match gtk {
-            GtkVersion::Gtk3 => self.custom.css.gtk3.clone(),
-            GtkVersion::Gtk4 => self.custom.css.gtk4.clone(),
+            GtkVersion::Gtk3 => self.custom.gtk3.clone(),
+            GtkVersion::Gtk4 => self.custom.gtk4.clone(),
         };
 
         let mode = match mode {
@@ -1107,8 +1107,10 @@ impl Preset {
             AccentsColor::Teal => "teal",
         };
 
-        css += &format!("/* Preset: {}@{} {}/{} */\n", self.name, self.version, mode, accent);
-        
+        css += &format!(
+            "/* Preset: {}@{} {}/{} */\n",
+            self.name, self.version, mode, accent
+        );
 
         for (name, variable) in self.variables.iter() {
             let value = variable.get(mode, accent);
@@ -1151,11 +1153,9 @@ impl Preset {
             css += &format!("@define-color dark_{} {}\n", name, value);
         }
 
-
         css = css.replace("@mode", mode);
         css = css.replace("@accent", accent);
         css
-
     }
 
     pub fn render_template(&self, template: String, mode: Mode, accent: AccentsColor) -> String {
@@ -1166,7 +1166,7 @@ impl Preset {
             Mode::Dark => "dark",
         };
 
-        let accent  = match accent {
+        let accent = match accent {
             AccentsColor::Blue => "blue",
             AccentsColor::Green => "green",
             AccentsColor::Yellow => "yellow",
@@ -1179,20 +1179,50 @@ impl Preset {
         };
 
         let mut data = BTreeMap::new();
-        data.insert("bg_color".to_string(), self.shell.bg_color.get(mode, accent));
-        data.insert("fg_color".to_string(), self.shell.fg_color.get(mode, accent));
-        data.insert("system_bg_color".to_string(), self.shell.system_bg_color.get(mode, accent));
-        data.insert("system_fg_color".to_string(), self.shell.system_fg_color.get(mode, accent));
-        data.insert("selected_bg_color".to_string(), self.shell.selected_bg_color.get(mode, accent));
-        data.insert("selected_fg_color".to_string(), self.shell.selected_fg_color.get(mode, accent));
-        data.insert("panel_bg_color".to_string(), self.shell.panel_bg_color.get(mode, accent));
-        data.insert("panel_fg_color".to_string(), self.shell.panel_fg_color.get(mode, accent));
-        data.insert("osd_bg_color".to_string(), self.shell.osd_bg_color.get(mode, accent));
-        data.insert("osd_fg_color".to_string(), self.shell.osd_fg_color.get(mode, accent));
+        data.insert(
+            "bg_color".to_string(),
+            self.shell.bg_color.get(mode, accent),
+        );
+        data.insert(
+            "fg_color".to_string(),
+            self.shell.fg_color.get(mode, accent),
+        );
+        data.insert(
+            "system_bg_color".to_string(),
+            self.shell.system_bg_color.get(mode, accent),
+        );
+        data.insert(
+            "system_fg_color".to_string(),
+            self.shell.system_fg_color.get(mode, accent),
+        );
+        data.insert(
+            "selected_bg_color".to_string(),
+            self.shell.selected_bg_color.get(mode, accent),
+        );
+        data.insert(
+            "selected_fg_color".to_string(),
+            self.shell.selected_fg_color.get(mode, accent),
+        );
+        data.insert(
+            "panel_bg_color".to_string(),
+            self.shell.panel_bg_color.get(mode, accent),
+        );
+        data.insert(
+            "panel_fg_color".to_string(),
+            self.shell.panel_fg_color.get(mode, accent),
+        );
+        data.insert(
+            "osd_bg_color".to_string(),
+            self.shell.osd_bg_color.get(mode, accent),
+        );
+        data.insert(
+            "osd_fg_color".to_string(),
+            self.shell.osd_fg_color.get(mode, accent),
+        );
 
         data.insert("name".to_string(), self.name.clone());
         data.insert("version".to_string(), self.version.clone());
-        
+
         // insert all variables
         for (name, variable) in self.variables.iter() {
             data.insert(name.to_slug(), variable.get(mode, accent));
@@ -1235,10 +1265,10 @@ impl Preset {
             data.insert(format!("dark_{}", name), value.to_string());
         }
 
-        data.insert("custom_css".to_string(), self.custom.css.shell.clone());
+        data.insert("custom_css".to_string(), self.custom.shell.clone());
         data.insert("mode".to_string(), mode.to_string());
         data.insert("accent".to_string(), accent.to_string());
-        
+
         let mut result = reg.render_template(&template, &data).unwrap();
 
         result = result.replace("@mode", mode);
@@ -1312,4 +1342,3 @@ impl ApplyBuilder {
         std::fs::write(&self.gtk4_path, css).unwrap();
     }
 }
-

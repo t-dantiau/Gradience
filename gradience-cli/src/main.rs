@@ -139,10 +139,12 @@ fn main() {
     store.load();
 
     // copy everything from the included shell source to the current directory
-    SHELL_SOURCE.extract(format!(
-        "{}/shell",
-        std::env::temp_dir().to_str().unwrap().to_string()
-    )).unwrap();
+    SHELL_SOURCE
+        .extract(format!(
+            "{}/shell",
+            std::env::temp_dir().to_str().unwrap().to_string()
+        ))
+        .unwrap();
 
     match &args.command {
         Commands::Shell {
@@ -170,6 +172,7 @@ fn main() {
                 },
                 args.mode.unwrap_or(Mode::Light).into(),
                 args.accent.unwrap_or(AccentsColor::Blue).into(),
+                gradience_lib::shell::ThemeName::Default,
             )
             .unwrap();
         }

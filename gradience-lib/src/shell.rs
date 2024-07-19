@@ -1,12 +1,17 @@
 use crate::preset::{AccentsColor, ApplyBuilder, Mode, Preset};
 use crate::utils::{get_gnome_shell_version, run_command, ShellVersion};
-use walkdir::WalkDir;
 use grass::from_path;
+use walkdir::WalkDir;
 
 pub struct Shell {
     pub version: ShellVersion,
     pub source_dir: String,
     pub preset: Preset,
+}
+
+pub enum ThemeName {
+    Default,
+    Custom { name: String },
 }
 
 impl Shell {
@@ -27,11 +32,12 @@ impl Shell {
             std::fs::create_dir_all(&format!("{}/gtk-3.0", theme_dir)).unwrap();
         }
 
-        ApplyBuilder::new(self.preset.clone()).accent(accent).mode(mode)
+        ApplyBuilder::new(self.preset.clone())
+            .accent(accent)
+            .mode(mode)
             .gtk3_path(format!("{}/gtk-3.0/gtk.css", theme_dir).as_str())
             .gtk4_path(format!("{}/gtk-4.0/gtk.css", theme_dir).as_str())
             .apply();
-
     }
 
     pub fn apply(
@@ -40,6 +46,7 @@ impl Shell {
         themes_dir: String,
         mode: Mode,
         accent: AccentsColor,
+        theme_name: ThemeName,
     ) -> Result<(), std::io::Error> {
         let version = match self.version {
             ShellVersion::G46 => "46",
@@ -51,15 +58,19 @@ impl Shell {
             }
         };
 
-        
-        
         let source_path = format!("{}/{}", self.source_dir, version);
         let target_path = format!(
-            "{}/{}-{:?}-{:?}",
+            match theme_name {
+                ThemeName::Default => "{}/{}-{:?}-{:?}",
+                ThemeName::Custom { name } => name,
+            },
             target_dir, self.preset.name, mode, accent
         );
         let theme_dir = format!(
-            "{}/{}-{:?}-{:?}",
+            match theme_name {
+                ThemeName::Default => "{}/{}-{:?}-{:?}",
+                ThemeName::Custom { name } => name,
+            },
             themes_dir, self.preset.name, mode, accent
         );
 
@@ -97,9 +108,16 @@ impl Shell {
 
         println!("Compiling gnome-shell.scss");
 
-        let css = from_path(&format!("{}/gnome-shell.scss", target_path), &grass::Options::default()).unwrap();
+        let css = from_path(
+            &format!("{}/gnome-shell.scss", target_path),
+            &grass::Options::default(),
+        )
+        .unwrap();
         std::fs::write(format!("{}/gnome-shell/gnome-shell.css", theme_dir), css)?;
-        println!("Compiled gnome-shell.scss to {}", format!("{}/gnome-shell/gnome-shell.css", theme_dir));
+        println!(
+            "Compiled gnome-shell.scss to {}",
+            format!("{}/gnome-shell/gnome-shell.css", theme_dir)
+        );
         self.apply_gtk(mode, accent, theme_dir);
 
         return Ok(());

@@ -83,8 +83,7 @@ impl Store {
     }
 
     #[cfg(feature = "online")]
-    pub fn list_online_presets(&self) -> Vec<String>  {
-
+    pub fn list_online_presets(&self) -> Vec<String> {
         let client = reqwest::blocking::Client::new();
         let res: GhApiUrlResponse = client
             .get(GH_API_URL)
@@ -116,11 +115,13 @@ impl Store {
             name
         );
 
-        let mut resp = client.get(&url).headers(Store::construct_headers()).send().unwrap();
+        let mut resp = client
+            .get(&url)
+            .headers(Store::construct_headers())
+            .send()
+            .unwrap();
         let content: Preset = resp.json().unwrap();
         Ok(content)
-    
-
     }
 
     pub fn list_local_presets(&self) -> Vec<String> {
@@ -130,5 +131,4 @@ impl Store {
         }
         local_presets
     }
-
 }
