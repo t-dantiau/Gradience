@@ -14,7 +14,7 @@
 
 ## CLI
 
-The CLI version of Gradience is available as a standalone binary. You can download it from [GitHub Releases](https://github.com/t-dantiau/Gradience/releases) or build it yourself from sources.
+The CLI version of Gradience is available as a standalone binary. You can download it from [GitHub Releases](https://github.com/t-dantiau/Gradience/releases) or build it yourself from sources or install it using `cargo install gradience-cli`
 
 Documentation for the CLI is available as markdown [here](./CommandLineHelp.md) or by using the `--help` flag.
 
