@@ -1,6 +1,12 @@
 /* Top Bar */
 // a.k.a. the panel
 
+$privacy_indicator_color: if($variant == 'light', $orange_4, $orange_3);
+$recording_indicator_color: $red_4;
+
+$transparent_panel_fg_color: $light_1;    // always white for transparent lock screens
+$system_panel_fg_color: $system_fg_color; // always light for lockscreen, overview
+
 $panel_height: 2.2em;
 $panel_transition_duration: 250ms; // same as the overview transition duration
 
@@ -11,116 +17,17 @@ $panel_transition_duration: 250ms; // same as the overview transition duration
   @extend %numeric;
   transition-duration: $panel_transition_duration;
 
-  // transparent panel on lock & login screens
-  &.unlock-screen,
-  &.login-screen,
-  &:overview {
-    background-color: transparent;
-  }
-
   // panel menus
   .panel-button {
-    font-weight: bold;
-    color: $panel_fg_color;
+    @include panel_button();
     -natural-hpadding: $base_padding * 2;
     -minimum-hpadding: $base_padding;
-    transition-duration: 150ms;
-    border: 3px solid transparent;
-    border-radius: 99px;
-
-    &.clock-display {
-      .clock {
-        transition-duration: 150ms;
-        border: 3px solid transparent;
-        border-radius: 99px;
-      }
-    }
-
-    &.screen-recording-indicator {
-      box-shadow: inset 0 0 0 100px $screenshot_ui_button_red;
-    }
-
-    &.screen-sharing-indicator {
-      box-shadow: inset 0 0 0 100px $warning_color;
-      StBoxLayout { margin: 0 $base_padding; }
-    }
-
-    &.screen-recording-indicator,
-    &.screen-sharing-indicator {
-      StBoxLayout {
-        spacing: $base_padding;
-      }
-
-      StIcon {
-        icon-size: $base_icon_size;
-      }
-    }
-
-    &:active, &:overview, &:focus, &:checked {
-      box-shadow: inset 0 0 0 100px transparentize($panel_fg_color, 0.8);
-
-      // The clock display needs to have the background on .clock because
-      // we want to exclude the do-not-disturb indicator from the background
-      &.clock-display {
-        box-shadow: none;
-
-        .clock {
-          box-shadow: inset 0 0 0 100px transparentize($panel_fg_color, 0.8);
-        }
-      }
-
-      &.screen-recording-indicator {
-        box-shadow: inset 0 0 0 100px transparentize($screenshot_ui_button_red, 0.15);
-      }
-      &.screen-sharing-indicator {
-        box-shadow: inset 0 0 0 100px transparentize($warning_color, 0.15);
-      }
-    }
-
-    &:hover {
-      box-shadow: inset 0 0 0 100px transparentize($panel_fg_color, 0.85);
-      &.clock-display {
-        box-shadow: none;
-        .clock {
-          box-shadow: inset 0 0 0 100px transparentize($panel_fg_color, 0.85);
-        }
-      }
-
-      &.screen-recording-indicator {
-        box-shadow: inset 0 0 0 100px transparentize($screenshot_ui_button_red, 0.1);
-      }
-      &.screen-sharing-indicator {
-        box-shadow: inset 0 0 0 100px transparentize($warning_color, 0.1);
-      }
-    }
-
-    &:active:hover, &:overview:hover, &:focus:hover, &:checked:hover {
-      box-shadow: inset 0 0 0 100px transparentize($panel_fg_color, 0.75);
-      &.clock-display {
-        box-shadow: none;
-        .clock {
-          box-shadow: inset 0 0 0 100px transparentize($panel_fg_color, 0.75);
-        }
-      }
-
-      &.screen-recording-indicator {
-        box-shadow: inset 0 0 0 100px transparentize($screenshot_ui_button_red, 0.2);
-      }
-      &.screen-sharing-indicator {
-        box-shadow: inset 0 0 0 100px transparentize($warning_color, 0.2);
-      }
-    }
 
     // status area icons
     .system-status-icon {
-      icon-size: $base_icon_size;
-      padding: $base_padding - 1px;
+      icon-size: $scalable_icon_size;
+      padding: 0 $base_padding;
       margin: 0 $base_margin;
-    }
-
-    .panel-status-indicators-box .system-status-icon,
-    .panel-status-menu-box .system-status-icon {
-      margin: 0;
     }
 
     // app menu icon
@@ -129,66 +36,110 @@ $panel_transition_duration: 250ms; // same as the overview transition duration
       // dimensions of the icon are hardcoded
     }
 
+    // reduce margin between icons in combined menu
+    .panel-status-menu-box,
+    .panel-status-indicators-box {
+      spacing: $base_margin;
+
+      > .system-status-icon {
+        padding: 0;
+      }
+    }
+
     &#panelActivities {
-      -natural-hpadding: $base_padding * 3;
+      & StBoxLayout {
+        padding: 0 $scaled_padding * 0.5; // use em padding to keep proportion
+        spacing: 5px;
+      }
+
+      & .workspace-dot {
+        border-radius: $forced_circular_radius;
+        min-width: $scalable_icon_size * 0.5;
+        min-height: $scalable_icon_size * 0.5;
+        background-color: $panel_fg_color;
+      }
+    }
+
+    // screen activity indicators
+    &.screen-recording-indicator,
+    &.screen-sharing-indicator {
+      StBoxLayout {
+        spacing: $scaled_padding;
+      }
+
+      StIcon {
+        icon-size: $scalable_icon_size;
+      }
+    }
+
+    &.screen-recording-indicator {
+      @include panel_button($bg:$recording_indicator_color, $fg:$_base_color_light, $style: filled);
+    }
+
+    &.screen-sharing-indicator {
+      @include panel_button($bg:$privacy_indicator_color, $fg:$_base_color_light, $style: filled);
+    }
+
+    // clock
+    &.clock-display {
+      // The clock display needs to have the background on .clock because
+      // we want to exclude the do-not-disturb indicator from the background
+      // see _drawing.scss for override details
+      @include panel_button($highlighted_child: true, $child_class: '.clock');
+
+      .clock {
+        // the highlighted child
+      }
+
+      .messages-indicator {
+        icon-size: $scalable_icon_size;
+      }
     }
   }
 
+  // transparent panel on overview, lock & login screens
+  &:overview,
   &.unlock-screen,
-  &.login-screen,
+  &.login-screen {
+    background-color: transparent;
+
+    // unfortunate duplication to keep indicator style in these states
+    .panel-button {
+      &.screen-recording-indicator {
+        @include panel_button($bg:$recording_indicator_color, $fg:$_base_color_light, $style: filled);
+      }
+
+      &.screen-sharing-indicator {
+        @include panel_button($bg:$privacy_indicator_color, $fg:$_base_color_light, $style: filled);
+      }
+    }
+  }
+
+  // use transparent text styles for lock & login screen panels
+  &.unlock-screen,
+  &.login-screen {
+    .panel-button {
+      @include panel_button($fg:$transparent_panel_fg_color);
+
+      // clock
+      &.clock-display {
+        @include panel_button($fg:$transparent_panel_fg_color, $highlighted_child: true, $child_class: '.clock');
+      }
+    }
+  }
+
+  // use system text styles for overview panel
   &:overview {
     .panel-button {
-      &:active, &:overview, &:focus, &:checked {
-        box-shadow: inset 0 0 0 100px rgba(255,255,255, 0.15);
+      @include panel_button($fg:$system_panel_fg_color);
 
-        &.clock-display {
-          box-shadow: none;
-
-          .clock {
-            box-shadow: inset 0 0 0 100px rgba(255,255,255, 0.15);
-          }
-        }
-
-        &.screen-recording-indicator {
-          box-shadow: inset 0 0 0 100px transparentize($screenshot_ui_button_red, 0.15);
-        }
-        &.screen-sharing-indicator {
-          box-shadow: inset 0 0 0 100px transparentize($warning_color, 0.15);
-        }
+      &#panelActivities .workspace-dot {
+        background-color: $system_panel_fg_color;
       }
 
-      &:hover {
-        box-shadow: inset 0 0 0 100px rgba(255,255,255, 0.10);
-        &.clock-display {
-          box-shadow: none;
-          .clock {
-            box-shadow: inset 0 0 0 100px rgba(255,255,255, 0.10);
-          }
-        }
-
-        &.screen-recording-indicator {
-          box-shadow: inset 0 0 0 100px transparentize($screenshot_ui_button_red, 0.1);
-        }
-        &.screen-sharing-indicator {
-          box-shadow: inset 0 0 0 100px transparentize($warning_color, 0.1);
-        }
-      }
-
-      &:active:hover, &:overview:hover, &:focus:hover, &:checked:hover {
-        box-shadow: inset 0 0 0 100px rgba(255,255,255, 0.2);
-        &.clock-display {
-          box-shadow: none;
-          .clock {
-            box-shadow: inset 0 0 0 100px rgba(255,255,255, 0.2);
-          }
-        }
-
-        &.screen-recording-indicator {
-          box-shadow: inset 0 0 0 100px transparentize($screenshot_ui_button_red, 0.2);
-        }
-        &.screen-sharing-indicator {
-          box-shadow: inset 0 0 0 100px transparentize($warning_color, 0.2);
-        }
+      // clock
+      &.clock-display {
+        @include panel_button($fg:$system_panel_fg_color, $highlighted_child: true, $child_class: '.clock');
       }
     }
   }
@@ -203,30 +154,27 @@ $panel_transition_duration: 250ms; // same as the overview transition duration
     spacing: 0;
   }
 
-  // indicator for active
-  .screencast-indicator,
-  .remote-access-indicator { color: $warning_color; }
+  // important privacy related indicators
+  .privacy-indicator { color: $privacy_indicator_color; }
 }
 
 // App Menu
 #appMenu {
-  spacing: $base_padding;
+  spacing: $scaled_padding;
   .label-shadow { color: transparent; }
 }
 
 #appMenu .panel-status-menu-box {
-  padding: 0 $base_padding;
-  spacing: $base_padding;
+  padding: 0 $scaled_padding;
+  spacing: $scaled_padding;
 }
 
 
 // Clock
-
 .clock-display-box {
   spacing: 2px;
-
   .clock {
-    padding-left: $base_padding * 2;
-    padding-right: $base_padding * 2;
+    padding-left: $scaled_padding * 2;
+    padding-right: $scaled_padding * 2;
   }
 }
