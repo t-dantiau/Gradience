@@ -10,8 +10,13 @@ This document contains the help content for the `gradience-cli` command-line pro
 * [`gradience-cli store`↴](#gradience-cli-store)
 * [`gradience-cli store add`↴](#gradience-cli-store-add)
 * [`gradience-cli store remove`↴](#gradience-cli-store-remove)
+* [`gradience-cli store online-list`↴](#gradience-cli-store-online-list)
+* [`gradience-cli store local-list`↴](#gradience-cli-store-local-list)
+* [`gradience-cli store download`↴](#gradience-cli-store-download)
 
 ## `gradience-cli`
+
+Change the look of GNOME, with ease
 
 **Usage:** `gradience-cli [OPTIONS] <COMMAND>`
 
@@ -68,6 +73,9 @@ Manage the store of presets
 
 * `add` — Add a new preset to the store
 * `remove` — Remove a preset from the store
+* `online-list` — List the online presets
+* `local-list` — List the local presets
+* `download` — Download a preset from the online store
 
 
 
@@ -92,6 +100,34 @@ Remove a preset from the store
 ###### **Arguments:**
 
 * `<NAME>` — The name of the preset to remove
+
+
+
+## `gradience-cli store online-list`
+
+List the online presets
+
+**Usage:** `gradience-cli store online-list`
+
+
+
+## `gradience-cli store local-list`
+
+List the local presets
+
+**Usage:** `gradience-cli store local-list`
+
+
+
+## `gradience-cli store download`
+
+Download a preset from the online store
+
+**Usage:** `gradience-cli store download <NAME>`
+
+###### **Arguments:**
+
+* `<NAME>` — The name of the preset to download
 
 
 

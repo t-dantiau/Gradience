@@ -18,6 +18,10 @@ The CLI version of Gradience is available as a standalone binary. You can downlo
 
 Documentation for the CLI is available as markdown [here](./CommandLineHelp.md) or by using the `--help` flag.
 
+## Library
+
+Gradience Library can be used by any rust program for doing GNOME theming. There is one cargo feature that can be enabled if you want to be able to download presets from the online preset store (`online`), this feature is disabled by default.
+
 ## License
 
 Gradience φοῖνιξ is licensed under the [EUPL](./LICENSE)

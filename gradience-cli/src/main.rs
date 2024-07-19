@@ -113,6 +113,15 @@ enum StoreCommands {
         /// The name of the preset to remove
         name: String,
     },
+    /// List the online presets
+    OnlineList,
+    /// List the local presets
+    LocalList,
+    /// Download a preset from the online store
+    Download {
+        /// The name of the preset to download
+        name: String,
+    },
 }
 
 fn main() {
@@ -188,6 +197,26 @@ fn main() {
             }
             StoreCommands::Remove { name } => {
                 store.remove_preset(name.to_string());
+            }
+            StoreCommands::OnlineList => {
+                for p in store.list_online_presets() {
+                    println!("- {}", p);
+                }
+            }
+            StoreCommands::Download { name } => {
+                match store.download_online_preset(name.to_string()) {
+                    Ok(preset) => store.add_preset(preset),
+                    Err(e) => println!("Error downloading {}: {}", name, e),
+                }
+                store.save_presets();
+            }
+            StoreCommands::LocalList => {
+                for p in store.list_local_presets() {
+                    println!("- {}", p);
+                }
+            }
+            _ => {
+                println!("Invalid store command");
             }
         },
     }
