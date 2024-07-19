@@ -423,6 +423,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "40ecd4077b5ae9fd2e9e169b102c6c330d0605168eb0e8bf79952b256dbefffd"
 
 [[package]]
+name = "gradience"
+version = "0.0.0"
+
+[[package]]
 name = "gradience-cli"
 version = "0.1.0"
 dependencies = [

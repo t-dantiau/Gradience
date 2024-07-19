@@ -12,3 +12,13 @@ repository = "https://github.com/t-dantiau/Gradience"
 license-file = "LICENSE"
 keywords = ["gnome", "gtk", "theme"]
 include = ["/shell", "/src"]
+
+[package]
+name = "gradience"
+version = "0.0.0"
+description = "Change the look of GNOME, with ease"
+license-file = "LICENSE"
+repository = "https://github.com/t-dantiau/Gradience"
+readme = "README.md"
+keywords = ["gnome", "gtk", "theme"]
+authors = ["Torben Dantiau <torben.dantiau@proton.me>"]
