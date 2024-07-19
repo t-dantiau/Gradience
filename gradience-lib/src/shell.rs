@@ -59,20 +59,20 @@ impl Shell {
         };
 
         let source_path = format!("{}/{}", self.source_dir, version);
-        let target_path = format!(
-            match theme_name {
-                ThemeName::Default => "{}/{}-{:?}-{:?}",
-                ThemeName::Custom { name } => name,
-            },
-            target_dir, self.preset.name, mode, accent
-        );
-        let theme_dir = format!(
-            match theme_name {
-                ThemeName::Default => "{}/{}-{:?}-{:?}",
-                ThemeName::Custom { name } => name,
-            },
-            themes_dir, self.preset.name, mode, accent
-        );
+        let target_path = match theme_name {
+            ThemeName::Default => format!(
+                "{}/{}-{:?}-{:?}",
+                target_dir, self.preset.name, mode, accent
+            ),
+            ThemeName::Custom { ref name } => name.to_string(),
+        };
+        let theme_dir = match theme_name {
+            ThemeName::Default => format!(
+                "{}/{}-{:?}-{:?}",
+                themes_dir, self.preset.name, mode, accent
+            ),
+            ThemeName::Custom { ref name } => name.to_string(),
+        };
 
         println!("Copying from {} to {}", source_path, target_path);
 

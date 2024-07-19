@@ -1,2 +1,13 @@
 [workspace]
 members = [ "gradience-cli","gradience-lib"]
+
+[workspace.package]
+name = "gradience"
+version = "0.1.0"
+authors = ["Torben Dantiau <torben.dantiau@proton.me>"]
+description = "Change the look of GNOME, with ease"
+documentation = "https://docs.rs/gradience"
+readme = "README.md"
+repository = "https://github.com/t-dantiau/Gradience"
+license-file = "LICENSE"
+keywords = ["gnome", "gtk", "theme"]
