@@ -22,6 +22,8 @@ Documentation for the CLI is available as markdown [here](./CommandLineHelp.md) 
 
 Gradience Library can be used by any rust program for doing GNOME theming. There is one cargo feature that can be enabled if you want to be able to download presets from the online preset store (`online`), this feature is disabled by default.
 
+If you only use the library, you need to provide shell templates yourself, you can look at gradience cli's code to see how it has been done for packaging everything in one binary.
+
 ## License
 
 Gradience φοῖνιξ is licensed under the [EUPL](./LICENSE)
