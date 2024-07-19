@@ -25,3 +25,7 @@ Gradience Library can be used by any rust program for doing GNOME theming. There
 ## License
 
 Gradience φοῖνιξ is licensed under the [EUPL](./LICENSE)
+
+## About
+
+This library is currently work in progress, but I choosed to keep the name, if anyone has a better name, I'll be open to change!
