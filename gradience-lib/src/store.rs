@@ -1,10 +1,15 @@
 use crate::preset::Preset;
 #[cfg(feature = "online")]
-use reqwest::header::{HeaderMap, HeaderValue, CONTENT_TYPE, USER_AGENT};
+use reqwest::header::{HeaderMap, HeaderValue, USER_AGENT};
 use serde::Deserialize;
 
+#[cfg(feature = "online")]
 const GH_API_URL: &str =
     "https://api.github.com/repos/t-dantiau/community/git/trees/main?recursive=1";
+
+#[cfg(feature = "online")]
+const GH_COMMUNITY_PRESETS_URL: &str = "https://github.com/t-dantiau/Community/raw/main";
+
 
 pub struct Store {
     pub base_path: String,
@@ -92,14 +97,13 @@ impl Store {
             .unwrap()
             .json()
             .unwrap();
-        println!("Online presets:");
 
         let mut online_presets = Vec::new();
 
         for tree in res.tree {
             let url = format!(
-                "https://github.com/t-dantiau/Community/raw/main/{}",
-                tree.path
+                "{}/{}",
+                GH_COMMUNITY_PRESETS_URL, tree.path
             );
             online_presets.push(url);
         }
@@ -111,11 +115,11 @@ impl Store {
         let client = reqwest::blocking::Client::new();
 
         let url = format!(
-            "https://github.com/t-dantiau/Community/raw/main/{}.json",
-            name
+            "{}/{}.json",
+            GH_COMMUNITY_PRESETS_URL, name
         );
 
-        let mut resp = client
+        let resp = client
             .get(&url)
             .headers(Store::construct_headers())
             .send()

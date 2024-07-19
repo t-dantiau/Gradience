@@ -1159,7 +1159,7 @@ impl Preset {
     }
 
     pub fn render_template(&self, template: String, mode: Mode, accent: AccentsColor) -> String {
-        let mut reg = Handlebars::new();
+        let reg = Handlebars::new();
 
         let mode = match mode {
             Mode::Light => "light",

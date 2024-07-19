@@ -218,9 +218,6 @@ fn main() {
                     println!("- {}", p);
                 }
             }
-            _ => {
-                println!("Invalid store command");
-            }
         },
     }
 }

@@ -74,8 +74,6 @@ impl Shell {
             ThemeName::Custom { ref name } => name.to_string(),
         };
 
-        println!("Copying from {} to {}", source_path, target_path);
-
         if !std::path::Path::new(&target_path).exists() {
             std::fs::create_dir_all(&target_path).unwrap();
         }
@@ -97,7 +95,6 @@ impl Shell {
 
         for entry in WalkDir::new(&target_path) {
             let entry = entry?;
-            println!("{}", entry.path().display());
             if entry.path().extension().unwrap_or_default() == "template" {
                 let template = std::fs::read_to_string(entry.path())?;
                 let rendered = self.preset.render_template(template, mode, accent);
@@ -106,18 +103,12 @@ impl Shell {
             }
         }
 
-        println!("Compiling gnome-shell.scss");
-
         let css = from_path(
             &format!("{}/gnome-shell.scss", target_path),
             &grass::Options::default(),
         )
         .unwrap();
         std::fs::write(format!("{}/gnome-shell/gnome-shell.css", theme_dir), css)?;
-        println!(
-            "Compiled gnome-shell.scss to {}",
-            format!("{}/gnome-shell/gnome-shell.css", theme_dir)
-        );
         self.apply_gtk(mode, accent, theme_dir);
 
         return Ok(());
