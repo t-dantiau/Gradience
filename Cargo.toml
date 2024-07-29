@@ -1,5 +1,5 @@
 [workspace]
-members = [ "gradience-cli","gradience-lib"]
+members = [ "gradience-cli","gradience-lib", "gradience"]
 
 [workspace.package]
 name = "gradience"
@@ -12,3 +12,4 @@ repository = "https://github.com/t-dantiau/Gradience"
 license-file = "LICENSE"
 keywords = ["gnome", "gtk", "theme"]
 include = ["/shell", "/src"]
+default-run = "gradience-cli"

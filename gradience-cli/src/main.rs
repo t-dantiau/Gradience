@@ -72,7 +72,7 @@ struct Args {
     #[arg(long)]
     shell_source: Option<String>,
 
-    /// The name of the preset to apply
+    /// The name of the preset to apply, it's not the filename
     #[arg(short, long)]
     preset: Option<String>,
 
@@ -81,6 +81,12 @@ struct Args {
 
     #[arg(long, hide = true)]
     markdown_help: bool,
+
+    #[arg(long)]
+    gtk3_path: Option<String>,
+
+    #[arg(long)]
+    gtk4_path: Option<String>,
 }
 
 #[derive(Subcommand, Debug)]
@@ -177,20 +183,27 @@ fn main() {
             .unwrap();
         }
         Commands::Gtk => {
-            ApplyBuilder::new(store.get_preset(args.preset.unwrap()).unwrap().clone())
-                .mode(args.mode.unwrap_or(Mode::Light).into())
-                .accent(args.accent.unwrap_or(AccentsColor::Blue).into())
-                .gtk3_path(
-                    shellexpand::tilde("~/.config/gtk-3.0/gtk.css")
-                        .to_string()
-                        .as_str(),
-                )
-                .gtk4_path(
-                    shellexpand::tilde("~/.config/gtk-4.0/gtk.css")
-                        .to_string()
-                        .as_str(),
-                )
-                .apply();
+            ApplyBuilder::new(
+                store
+                    .get_preset(args.preset.expect("error args"))
+                    .unwrap_or_else(|| {
+                        panic!("Unable to find this preset, use the name of the preset, not the filename");
+                    })
+                    .clone(),
+            )
+            .mode(args.mode.unwrap_or(Mode::Light).into())
+            .accent(args.accent.unwrap_or(AccentsColor::Blue).into())
+            .gtk3_path(
+                shellexpand::tilde(args.gtk3_path.unwrap_or("~/.config/gtk-3.0/gtk.css".to_string()).as_str())
+                    .to_string()
+                    .as_str(),
+            )
+            .gtk4_path(
+                shellexpand::tilde(args.gtk4_path.unwrap_or("~/.config/gtk-4.0/gtk.css".to_string()).as_str())
+                                    .to_string()
+                                    .as_str(),
+            )
+            .apply();
         }
         Commands::Store { command } => match command {
             StoreCommands::Add { path } => {

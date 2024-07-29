@@ -1114,43 +1114,43 @@ impl Preset {
 
         for (name, variable) in self.variables.iter() {
             let value = variable.get(mode, accent);
-            css += &format!("@define-color {} {}\n", name.to_slug(), value);
+            css += &format!("@define-color {} {};\n", name.to_slug(), value);
         }
 
         for (name, value) in self.palette.blue.iter() {
-            css += &format!("@define-color blue_{} {}\n", name, value);
+            css += &format!("@define-color blue_{} {};\n", name, value);
         }
 
         for (name, value) in self.palette.green.iter() {
-            css += &format!("@define-color green_{} {}\n", name, value);
+            css += &format!("@define-color green_{} {};\n", name, value);
         }
 
         for (name, value) in self.palette.yellow.iter() {
-            css += &format!("@define-color yellow_{} {}\n", name, value);
+            css += &format!("@define-color yellow_{} {};\n", name, value);
         }
 
         for (name, value) in self.palette.orange.iter() {
-            css += &format!("@define-color orange_{} {}\n", name, value);
+            css += &format!("@define-color orange_{} {};\n", name, value);
         }
 
         for (name, value) in self.palette.red.iter() {
-            css += &format!("@define-color red_{} {}\n", name, value);
+            css += &format!("@define-color red_{} {};\n", name, value);
         }
 
         for (name, value) in self.palette.purple.iter() {
-            css += &format!("@define-color purple_{} {}\n", name, value);
+            css += &format!("@define-color purple_{} {};\n", name, value);
         }
 
         for (name, value) in self.palette.brown.iter() {
-            css += &format!("@define-color brown_{} {}\n", name, value);
+            css += &format!("@define-color brown_{} {};\n", name, value);
         }
 
         for (name, value) in self.palette.light.iter() {
-            css += &format!("@define-color light_{} {}\n", name, value);
+            css += &format!("@define-color light_{} {};\n", name, value);
         }
 
         for (name, value) in self.palette.dark.iter() {
-            css += &format!("@define-color dark_{} {}\n", name, value);
+            css += &format!("@define-color dark_{} {};\n", name, value);
         }
 
         css = css.replace("@mode", mode);
