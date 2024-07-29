@@ -1,2 +1,5 @@
 /target
 /store
+/.flatpak
+/_build
+.vscode/settings.json
