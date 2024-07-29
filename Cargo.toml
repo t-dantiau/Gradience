@@ -1,5 +1,5 @@
 [workspace]
-members = [ "gradience-cli","gradience-lib", "gradience"]
+members = [ "gradience-cli","gradience-lib"]
 
 [workspace.package]
 name = "gradience"
