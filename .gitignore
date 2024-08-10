@@ -3,3 +3,6 @@
 /.flatpak
 /_build
 .vscode/settings.json
+/theme
+/themes
+/temp

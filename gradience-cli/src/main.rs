@@ -94,9 +94,14 @@ enum Commands {
     /// Apply the theme to the shell, it will create a new theme with a shell theme and GTK theme
     Shell {
         /// The path to the temporary directory where the theme will be created and build
+        #[arg(long)]
         temp_dir: Option<String>,
         /// The path to the directory where the theme will be stored
+        #[arg(long)]
         theme_dir: Option<String>,
+
+        #[arg(short, long)]
+        gsettings: bool,
     },
     /// Apply the theme to the GTK theme
     Gtk,
@@ -156,6 +161,7 @@ fn main() {
         Commands::Shell {
             temp_dir,
             theme_dir,
+            gsettings,
         } => {
             Shell::new(
                 match args.shell_source {
@@ -165,7 +171,14 @@ fn main() {
                         std::env::temp_dir().to_str().unwrap().to_string()
                     ),
                 },
-                store.get_preset(args.preset.unwrap()).unwrap().clone(),
+                store
+                    .get_preset(args.preset.expect("please provide --preset argument"))
+                    .unwrap_or_else(|| {
+                        panic!(
+                            "Unable to find this preset, use the name of the preset, not the filename"
+                        );
+                    })
+                    .clone(),
             )
             .apply(
                 match temp_dir {
@@ -179,13 +192,14 @@ fn main() {
                 args.mode.unwrap_or(Mode::Light).into(),
                 args.accent.unwrap_or(AccentsColor::Blue).into(),
                 gradience_lib::shell::ThemeName::Default,
+                *gsettings,
             )
             .unwrap();
         }
         Commands::Gtk => {
             ApplyBuilder::new(
                 store
-                    .get_preset(args.preset.expect("error args"))
+                    .get_preset(args.preset.expect("please provide --preset argument"))
                     .unwrap_or_else(|| {
                         panic!("Unable to find this preset, use the name of the preset, not the filename");
                     })

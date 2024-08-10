@@ -18,6 +18,22 @@ The CLI version of Gradience is available as a standalone binary. You can downlo
 
 Documentation for the CLI is available as markdown [here](./CommandLineHelp.md) or by using the `--help` flag.
 
+### Usage
+
+First of all, you need a theme, you can try using an old gradience one or make your own from scratch, see [Community](https://github.com/t-dantiau/Gradience) for examples.
+
+Then, you can either create a shell theme (recommended option) or just apply GTK theme.
+
+For applying a shell theme, you can use the following command (customize as needed)
+
+``` shell
+gradience-cli --preset 'Rosé Pine New' --mode dark --accent red shell
+```
+
+Please note, that `--preset` must be the name of the preset as written inside the theme file, not the filename!
+
+And then go in GNOME tweaks and select the freshly created theme (Gradience is able to automaticaly do that with `--gsettings`)
+
 ## Library
 
 Gradience Library can be used by any rust program for doing GNOME theming. There is one cargo feature that can be enabled if you want to be able to download presets from the online preset store (`online`), this feature is disabled by default.

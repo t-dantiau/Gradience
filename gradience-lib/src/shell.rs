@@ -1,5 +1,5 @@
 use crate::preset::{AccentsColor, ApplyBuilder, Mode, Preset};
-use crate::utils::{get_gnome_shell_version, run_command, ShellVersion};
+use crate::utils::{get_gnome_shell_version, run_command, ShellVersion, set_shell_theme};
 use grass::from_path;
 use walkdir::WalkDir;
 
@@ -47,6 +47,7 @@ impl Shell {
         mode: Mode,
         accent: AccentsColor,
         theme_name: ThemeName,
+        gsettings: bool,
     ) -> Result<(), std::io::Error> {
         let version = match self.version {
             ShellVersion::G46 => "46",
@@ -84,7 +85,7 @@ impl Shell {
 
         std::fs::create_dir_all(&format!("{}/gnome-shell", theme_dir)).unwrap();
 
-        let output = run_command(&format!("cp -r {}/* {}", source_path, target_path));
+        let output = run_command(&format!("cp -r {}/* \"{}\"", source_path, target_path));
 
         if !output.status.success() {
             return Err(std::io::Error::new(
@@ -110,6 +111,14 @@ impl Shell {
         .unwrap();
         std::fs::write(format!("{}/gnome-shell/gnome-shell.css", theme_dir), css)?;
         self.apply_gtk(mode, accent, theme_dir);
+
+        if gsettings {
+            set_shell_theme(
+                format!(
+                    "{}-{:?}-{:?}", self.preset.name, mode, accent
+                ).as_str()
+            );
+        }
 
         return Ok(());
     }
